@@ -1,10 +1,12 @@
-import { FETCH_CAT, FETCH_DOG } from '../actions/index';
+import { FETCH_CAT, DELETE_CAT } from '../actions/cat';
+import { FETCH_DOG, DELETE_DOG, FETCH_ERROR } from '../actions/dog';
 import { combineReducers, createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
 const initialState = {
-  dog: [],
-  cats: [],
+  dog: null,
+  cat: null,
+  error: null,
 };
 
 const catReducer = (state = initialState, action) => {
@@ -13,8 +15,10 @@ const catReducer = (state = initialState, action) => {
       console.log('reducer fetching cat');
       return {
         ...state,
-        cats: action.payload,
+        cat: action.payload,
       };
+    case DELETE_CAT:
+      return state;
     default: {
       return state;
     }
@@ -26,7 +30,14 @@ const dogReducer = (state = initialState, action) => {
       console.log('reducer fetching dog');
       return {
         ...state,
-        dogs: action.payload,
+        dog: action.payload,
+      };
+    case DELETE_DOG:
+      return state;
+    case FETCH_ERROR:
+      return {
+        ...state,
+        error: action.payload,
       };
     default: {
       return state;
@@ -35,8 +46,8 @@ const dogReducer = (state = initialState, action) => {
 };
 
 const reducers = combineReducers({
-  cats: catReducer,
-  dogs: dogReducer,
+  cat: catReducer,
+  dog: dogReducer,
 });
 
 const middleware = applyMiddleware(thunk);
